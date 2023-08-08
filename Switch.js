@@ -22,8 +22,9 @@ function App() {
           index === currentIndex ? { ...item, isOn: false } : item
         );
       } else if (switchesOn.length >= 2) {
-        const switchOffIndex =
-          switchesOn[Math.floor(Math.random() * switchesOn.length)].index;
+        const switchOffIndex = switchesOn
+          .filter((_, index) => index !== currentIndex)
+          [Math.floor(Math.random() * (switchesOn.length - 1))].index;
         return prevSwitches.map((item, index) =>
           index === currentIndex
             ? { ...item, isOn: true }
@@ -53,6 +54,7 @@ function App() {
       prevSwitches.map((item, index) => ({
         ...item,
         label: preset.labels[index] || item.label,
+        isOn: false
       }))
     );
   };
