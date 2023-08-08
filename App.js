@@ -15,8 +15,17 @@ function App() {
         index === currentIndex
           ? { ...item, isOn: !item.isOn }
           : item.isOn && prevSwitches.filter((item) => item.isOn).length >= 2
-          ? { ...item, isOn: false }
+          ? { ...item, isOn: Math.random() < 0.5 }
           : item
+      )
+    );
+  };
+
+  const handleChange = (index) => (event) => {
+    const newLabel = event.target.value;
+    setSwitches((prevSwitches) =>
+      prevSwitches.map((item, i) =>
+        i === index ? { ...item, label: newLabel } : item
       )
     );
   };
@@ -24,11 +33,14 @@ function App() {
   return (
     <div className="App">
       {switches.map((item, index) => (
-        <Switch
-          key={item.label}
-          handleToggle={handleToggle(index)}
-          {...item}
-        />
+        <div key={item.label}>
+          <Switch handleToggle={handleToggle(index)} {...item} />
+          <input
+            value={item.label}
+            onChange={handleChange(index)}
+            placeholder="输入你的选项"
+          />
+        </div>
       ))}
     </div>
   );
