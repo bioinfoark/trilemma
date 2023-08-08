@@ -15,7 +15,7 @@ function App() {
         index === currentIndex
           ? { ...item, isOn: !item.isOn }
           : item.isOn && prevSwitches.filter((item) => item.isOn).length >= 2
-          ? { ...item, isOn: Math.random() < 0.5 }
+          ? { ...item, isOn: false }
           : item
       )
     );
@@ -32,16 +32,22 @@ function App() {
 
   return (
     <div className="App">
-      {switches.map((item, index) => (
-        <div key={item.label}>
-          <Switch handleToggle={handleToggle(index)} {...item} />
+      <div className="switches">
+        {switches.map((item, index) => (
+          <div key={item.label}>
+            <Switch handleToggle={handleToggle(index)} {...item} />
+          </div>
+        ))}
+      </div>
+      <div className="inputs">
+        {switches.map((item, index) => (
           <input
             value={item.label}
             onChange={handleChange(index)}
             placeholder="输入你的选项"
           />
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
