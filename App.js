@@ -16,24 +16,26 @@ function App() {
 
   const handleToggle = (currentIndex) => () => {
     setSwitches((prevSwitches) => {
-      const switchesOn = prevSwitches.filter((item) => item.isOn);
+      const switchesOnIndices = prevSwitches
+        .map((item, index) => ({ ...item, index }))
+        .filter((item) => item.isOn);
       if (prevSwitches[currentIndex].isOn) {
         return prevSwitches.map((item, index) =>
           index === currentIndex ? { ...item, isOn: false } : item
         );
-      } else if (switchesOn.length < 2) {
-        return prevSwitches.map((item, index) =>
-          index === currentIndex ? { ...item, isOn: true } : item
-        );
-      } else {
+      } else if (switchesOnIndices.length >= 2) {
         const switchOffIndex =
-          switchesOn[Math.floor(Math.random() * switchesOn.length)].index;
+          switchesOnIndices[Math.floor(Math.random() * switchesOnIndices.length)].index;
         return prevSwitches.map((item, index) =>
           index === currentIndex
             ? { ...item, isOn: true }
             : index === switchOffIndex
             ? { ...item, isOn: false }
             : item
+        );
+      } else {
+        return prevSwitches.map((item, index) =>
+          index === currentIndex ? { ...item, isOn: true } : item
         );
       }
     });
@@ -53,6 +55,7 @@ function App() {
       prevSwitches.map((item, index) => ({
         ...item,
         label: preset.labels[index] || item.label,
+        isOn: false
       }))
     );
   };
