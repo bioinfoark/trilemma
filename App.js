@@ -10,15 +10,31 @@ function App() {
   ]);
 
   const handleToggle = (currentIndex) => () => {
-    setSwitches((prevSwitches) =>
-      prevSwitches.map((item, index) =>
-        index === currentIndex
-          ? { ...item, isOn: !item.isOn }
-          : item.isOn && prevSwitches.filter((item) => item.isOn).length >= 2
-          ? { ...item, isOn: false }
-          : item
-      )
-    );
+    setSwitches((prevSwitches) => {
+      const switchesOn = prevSwitches.filter((item) => item.isOn);
+      if (switchesOn.length < 2) {
+        // If less than 2 switches are on, simply toggle the current switch
+        return prevSwitches.map((item, index) =>
+          index === currentIndex ? { ...item, isOn: !item.isOn } : item
+        );
+      } else if (prevSwitches[currentIndex].isOn) {
+        // If the current switch is on, we can simply turn it off
+        return prevSwitches.map((item, index) =>
+          index === currentIndex ? { ...item, isOn: false } : item
+        );
+      } else {
+        // If the current switch is off and 2 switches are already on, turn off a random one
+        const switchOffIndex =
+          switchesOn[Math.floor(Math.random() * switchesOn.length)].index;
+        return prevSwitches.map((item, index) =>
+          index === currentIndex
+            ? { ...item, isOn: true }
+            : index === switchOffIndex
+            ? { ...item, isOn: false }
+            : item
+        );
+      }
+    });
   };
 
   const handleChange = (index) => (event) => {
