@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import Switch from "./Switch";
 
+const presets = [
+  { title: "Life", labels: ["Sleep", "Study", "Social"] },
+  { title: "Internet", labels: ["Fast", "Stable", "Cheap"] },
+];
+
 function App() {
   const [switches, setSwitches] = useState([
     { label: "有钱", isOn: false, color: "#06D6A0" },
@@ -13,17 +18,14 @@ function App() {
     setSwitches((prevSwitches) => {
       const switchesOn = prevSwitches.filter((item) => item.isOn);
       if (switchesOn.length < 2) {
-        // If less than 2 switches are on, simply toggle the current switch
         return prevSwitches.map((item, index) =>
           index === currentIndex ? { ...item, isOn: !item.isOn } : item
         );
       } else if (prevSwitches[currentIndex].isOn) {
-        // If the current switch is on, we can simply turn it off
         return prevSwitches.map((item, index) =>
           index === currentIndex ? { ...item, isOn: false } : item
         );
       } else {
-        // If the current switch is off and 2 switches are already on, turn off a random one
         const switchOffIndex =
           switchesOn[Math.floor(Math.random() * switchesOn.length)].index;
         return prevSwitches.map((item, index) =>
@@ -46,6 +48,15 @@ function App() {
     );
   };
 
+  const applyPreset = (preset) => () => {
+    setSwitches((prevSwitches) =>
+      prevSwitches.map((item, index) => ({
+        ...item,
+        label: preset.labels[index] || item.label,
+      }))
+    );
+  };
+
   return (
     <div className="App">
       <div className="switches">
@@ -62,6 +73,11 @@ function App() {
             onChange={handleChange(index)}
             placeholder="输入你的选项"
           />
+        ))}
+      </div>
+      <div className="presets">
+        {presets.map((preset) => (
+          <button onClick={applyPreset(preset)}>{preset.title}</button>
         ))}
       </div>
     </div>
